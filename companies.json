@@ -1,0 +1,63 @@
+{
+  "categories": {
+    "DLP": [
+      "Nightfall AI",
+      "Varonis",
+      "Forcepoint",
+      "Digital Guardian",
+      "Proofpoint",
+      "Symantec DLP"
+    ],
+    "DSPM": [
+      "Cyera",
+      "BigID",
+      "Sentra",
+      "Normalyze",
+      "Laminar",
+      "Dig Security",
+      "Polar Security",
+      "Securiti.ai"
+    ],
+    "CASB/SASE": [
+      "Netskope",
+      "Zscaler",
+      "Skyhigh Security"
+    ],
+    "Cloud Security": [
+      "Wiz",
+      "Lacework",
+      "Orca Security"
+    ],
+    "Endpoint/EDR": [
+      "CrowdStrike",
+      "SentinelOne",
+      "Code42"
+    ],
+    "Browser Security": [
+      "SquareX",
+      "Island",
+      "Talon",
+      "LayerX Security",
+      "Seraphic Security",
+      "Surf Security",
+      "Menlo Security"
+    ],
+    "Workflow/BPM": [
+      "Camunda",
+      "ProcessMaker",
+      "Appian",
+      "Pega",
+      "Nintex",
+      "Bizagi",
+      "Flowable",
+      "Workato"
+    ],
+    "AI Security": [
+      "Lakera"
+    ],
+    "Other": [
+      "Veza",
+      "Microsoft Purview"
+    ]
+  }
+}
