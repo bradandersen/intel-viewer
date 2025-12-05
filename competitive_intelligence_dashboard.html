@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DLP/DSPM Competitive Intelligence Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            color: #2c3e50;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-card .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .controls input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e6ed;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .controls input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .feed-container {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .feed-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .feed-header {
+            padding: 20px;
+            border-bottom: 2px solid #f0f3f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .feed-header h2 {
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        
+        .company-tag {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .tag-nightfall { background: #e3f2fd; color: #1976d2; }
+        .tag-varonis { background: #f3e5f5; color: #7b1fa2; }
+        .tag-forcepoint { background: #fff3e0; color: #ef6c00; }
+        .tag-code42 { background: #e8f5e9; color: #388e3c; }
+        .tag-proofpoint { background: #e0f2f1; color: #00695c; }
+        .tag-digitalguardian { background: #fce4ec; color: #c2185b; }
+        .tag-securiti { background: #f1f8e9; color: #558b2f; }
+        .tag-bigid { background: #e8eaf6; color: #3949ab; }
+        .tag-normalyze { background: #fff9c4; color: #f57f17; }
+        .tag-wiz { background: #e1f5fe; color: #0277bd; }
+        .tag-lacework { background: #f3e5f5; color: #6a1b9a; }
+        .tag-orca { background: #e0f7fa; color: #00838f; }
+        .tag-cyera { background: #fce4ec; color: #ad1457; }
+        .tag-laminar { background: #e8f5e9; color: #2e7d32; }
+        .tag-dig { background: #fff3e0; color: #e65100; }
+        .tag-veza { background: #ede7f6; color: #4527a0; }
+        .tag-sentra { background: #f1f8e9; color: #689f38; }
+        .tag-netskope { background: #e3f2fd; color: #1565c0; }
+        .tag-zscaler { background: #fce4ec; color: #c2185b; }
+        .tag-purview { background: #e8eaf6; color: #283593; }
+        .tag-lakera { background: #fff9c4; color: #f9a825; }
+        .tag-polar { background: #e0f7fa; color: #006064; }
+        .tag-symantec { background: #ffebee; color: #c62828; }
+        .tag-skyhigh { background: #e0f2f1; color: #00796b; }
+        .tag-crowdstrike { background: #e8eaf6; color: #3949ab; }
+        .tag-sentinelone { background: #f3e5f5; color: #6a1b9a; }
+        .tag-squarex { background: #fff9c4; color: #f57f17; }
+        .tag-island { background: #e1f5fe; color: #01579b; }
+        .tag-talon { background: #f1f8e9; color: #33691e; }
+        .tag-layerx { background: #fce4ec; color: #880e4f; }
+        .tag-seraphic { background: #e0f2f1; color: #004d40; }
+        .tag-surf { background: #fff3e0; color: #e65100; }
+        .tag-menlo { background: #ede7f6; color: #4527a0; }
+        .tag-news { background: #fce4ec; color: #c2185b; }
+        
+        .feed-items {
+            padding: 20px;
+        }
+        
+        .feed-item {
+            padding: 16px;
+            border-left: 3px solid #667eea;
+            background: #f8f9fa;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .feed-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .feed-item h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        .feed-item a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .feed-item a:hover {
+            text-decoration: underline;
+        }
+        
+        .feed-item .meta {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 8px;
+        }
+        
+        .feed-item .description {
+            font-size: 14px;
+            color: #555;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+        
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background: #5568d3;
+        }
+
+        .expand-btn {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .expand-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .expand-btn .arrow {
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        .expand-btn.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .competitor-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-top: 10px;
+        }
+
+        .competitor-list.show {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .competitor-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .competitor-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e6ed;
+            font-size: 13px;
+            color: #2c3e50;
+        }
+
+        .competitor-list li:last-child {
+            border-bottom: none;
+        }
+
+        .competitor-list .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 10px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 DLP/DSPM Competitive Intelligence Dashboard</h1>
+        <p>Real-time monitoring of Data Loss Prevention and Data Security Posture Management landscape</p>
+    </div>
+    
+    <div class="note">
+        <strong>📌 Note:</strong> This dashboard aggregates RSS feeds and news from major DLP/DSPM vendors. 
+        Refresh this page to get the latest updates. Some feeds may take a moment to load due to CORS restrictions. 
+        For best results, use the search function below to filter by keywords.
+    </div>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Competitors Tracked</h3>
+            <div class="number" id="competitorCount">15+</div>
+            <button class="expand-btn" onclick="toggleCompetitorList()">
+                <span>View List</span>
+                <span class="arrow">▼</span>
+            </button>
+            <div class="competitor-list" id="competitorList">
+                <ul id="competitorListItems"></ul>
+            </div>
+        </div>
+        <div class="stat-card">
+            <h3>News Sources</h3>
+            <div class="number" id="sourceCount">8</div>
+            <button class="expand-btn" onclick="toggleSourceList()">
+                <span>View List</span>
+                <span class="arrow">▼</span>
+            </button>
+            <div class="competitor-list" id="sourceList">
+                <ul id="sourceListItems"></ul>
+            </div>
+        </div>
+        <div class="stat-card">
+            <h3>Last Updated</h3>
+            <div class="number" id="lastUpdate">Just Now</div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="🔍 Search by keyword (e.g., 'Shadow AI', 'funding', 'product launch')...">
+    </div>
+    
+    <div class="feed-container" id="feedContainer">
+        <div class="loading">Loading competitive intelligence feeds...</div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        // Competitive Intelligence Sources
+        const competitorFeeds = [
+            {
+                name: 'Nightfall AI',
+                tag: 'nightfall',
+                feeds: [
+                    'https://www.nightfall.ai/blog/rss.xml'
+                ]
+            },
+            {
+                name: 'Varonis',
+                tag: 'varonis',
+                feeds: [
+                    'https://www.varonis.com/blog/feed/'
+                ]
+            },
+            {
+                name: 'Forcepoint',
+                tag: 'forcepoint',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Forcepoint+DLP+OR+%22data+loss+prevention%22+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Code42',
+                tag: 'code42',
+                feeds: [
+                    'https://www.code42.com/blog/feed/'
+                ]
+            },
+            {
+                name: 'Proofpoint',
+                tag: 'proofpoint',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Proofpoint+DLP+OR+%22email+security%22+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Digital Guardian',
+                tag: 'digitalguardian',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Digital+Guardian%22+DLP+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Securiti.ai',
+                tag: 'securiti',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Securiti.ai+DSPM+OR+privacy+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'BigID',
+                tag: 'bigid',
+                feeds: [
+                    'https://news.google.com/rss/search?q=BigID+DSPM+OR+%22data+security%22+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Normalyze',
+                tag: 'normalyze',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Normalyze+DSPM+cloud+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Wiz',
+                tag: 'wiz',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Wiz.io+cloud+security+OR+DSPM+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Lacework',
+                tag: 'lacework',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Lacework+cloud+security+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Orca Security',
+                tag: 'orca',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Orca+Security%22+cloud+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Cyera',
+                tag: 'cyera',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Cyera+DSPM+OR+%22data+security%22+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Laminar',
+                tag: 'laminar',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Laminar+Security%22+DSPM+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Dig Security',
+                tag: 'dig',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Dig+Security%22+DSPM+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Veza',
+                tag: 'veza',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Veza+%22access+intelligence%22+OR+%22identity+governance%22+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Sentra',
+                tag: 'sentra',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Sentra+DSPM+OR+%22data+security%22+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Netskope',
+                tag: 'netskope',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Netskope+CASB+OR+DLP+OR+SASE+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Zscaler',
+                tag: 'zscaler',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Zscaler+DLP+OR+%22data+security%22+-jobs+-stock&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Microsoft Purview',
+                tag: 'purview',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Microsoft+Purview%22+DLP+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Lakera',
+                tag: 'lakera',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Lakera+AI+security+OR+LLM+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Polar Security',
+                tag: 'polar',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Polar+Security%22+DSPM+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Symantec DLP',
+                tag: 'symantec',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Symantec+DLP+OR+Broadcom+DLP+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Skyhigh Security',
+                tag: 'skyhigh',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Skyhigh+Security%22+CASB+OR+DLP+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'CrowdStrike',
+                tag: 'crowdstrike',
+                feeds: [
+                    'https://news.google.com/rss/search?q=CrowdStrike+%22data+protection%22+OR+DLP+-jobs+-stock&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'SentinelOne',
+                tag: 'sentinelone',
+                feeds: [
+                    'https://news.google.com/rss/search?q=SentinelOne+%22data+control%22+OR+DLP+-jobs+-stock&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'SquareX',
+                tag: 'squarex',
+                feeds: [
+                    'https://news.google.com/rss/search?q=SquareX+%22browser+security%22+OR+DLP+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Island',
+                tag: 'island',
+                feeds: [
+                    'https://news.google.com/rss/search?q=Island+%22enterprise+browser%22+OR+%22browser+security%22+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Talon (Palo Alto)',
+                tag: 'talon',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Talon+Cyber%22+OR+%22Prisma+Access+Browser%22+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'LayerX Security',
+                tag: 'layerx',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22LayerX+Security%22+browser+OR+AI+security+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Seraphic Security',
+                tag: 'seraphic',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Seraphic+Security%22+browser+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Surf Security',
+                tag: 'surf',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Surf+Security%22+browser+OR+SASE+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Menlo Security',
+                tag: 'menlo',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Menlo+Security%22+browser+isolation+OR+DLP+-jobs&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Security News - DLP',
+                tag: 'news',
+                feeds: [
+                    'https://news.google.com/rss/search?q=data+loss+prevention+OR+DLP+OR+DSPM&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Security News - Shadow AI',
+                tag: 'news',
+                feeds: [
+                    'https://news.google.com/rss/search?q=%22Shadow+AI%22+OR+%22AI+data+leakage%22+security&hl=en-US&gl=US&ceid=US:en'
+                ]
+            },
+            {
+                name: 'Cybersecurity Funding',
+                tag: 'news',
+                feeds: [
+                    'https://news.google.com/rss/search?q=cybersecurity+%22Series+B%22+OR+%22Series+C%22+OR+acquisition+data+security&hl=en-US&gl=US&ceid=US:en'
+                ]
+            }
+        ];
+        
+        let allFeeds = [];
+        
+        // RSS Parser using RSS2JSON service (free API)
+        async function fetchFeed(url, companyName, tag) {
+            try {
+                const apiKey = CONFIG?.RSS2JSON_API_KEY || 'YOUR_API_KEY_HERE';
+                const rss2jsonUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&api_key=${apiKey}&count=5`;
+                const response = await fetch(rss2jsonUrl);
+                const data = await response.json();
+                
+                if (data.status === 'ok') {
+                    return {
+                        company: companyName,
+                        tag: tag,
+                        items: data.items.map(item => ({
+                            title: item.title,
+                            link: item.link,
+                            description: item.description?.replace(/<[^>]*>/g, '').substring(0, 200) + '...',
+                            pubDate: new Date(item.pubDate),
+                            company: companyName
+                        }))
+                    };
+                }
+            } catch (error) {
+                console.error(`Error fetching ${companyName}:`, error);
+            }
+            return null;
+        }
+        
+        // Initialize dashboard
+        async function loadFeeds() {
+            const container = document.getElementById('feedContainer');
+            container.innerHTML = '<div class="loading">Loading competitive intelligence...</div>';
+            
+            allFeeds = [];
+            
+            // Load all feeds
+            for (const competitor of competitorFeeds) {
+                for (const feedUrl of competitor.feeds) {
+                    const feedData = await fetchFeed(feedUrl, competitor.name, competitor.tag);
+                    if (feedData) {
+                        allFeeds.push(feedData);
+                    }
+                }
+            }
+            
+            renderFeeds(allFeeds);
+            setupSearch();
+            updateLastUpdated();
+        }
+        
+        function renderFeeds(feeds) {
+            const container = document.getElementById('feedContainer');
+            
+            if (feeds.length === 0) {
+                container.innerHTML = `
+                    <div class="note">
+                        <strong>⚠️ Setup Required:</strong> This dashboard uses RSS2JSON API. 
+                        To activate live feeds, get a free API key from <a href="https://rss2json.com" target="_blank">rss2json.com</a> 
+                        and replace 'YOUR_API_KEY' in the code.<br><br>
+                        <strong>Manual Alternative:</strong> Visit these sources directly:
+                        <ul style="margin-top: 10px;">
+                            <li><a href="https://www.nightfall.ai/blog" target="_blank">Nightfall Blog</a></li>
+                            <li><a href="https://news.google.com/search?q=data%20loss%20prevention" target="_blank">Google News - DLP</a></li>
+                            <li><a href="https://www.varonis.com/blog" target="_blank">Varonis Blog</a></li>
+                            <li><a href="https://www.code42.com/blog" target="_blank">Code42 Blog</a></li>
+                        </ul>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            feeds.forEach(feed => {
+                const section = document.createElement('div');
+                section.className = 'feed-section';
+                
+                section.innerHTML = `
+                    <div class="feed-header">
+                        <h2>${feed.company}</h2>
+                        <span class="company-tag tag-${feed.tag}">${feed.tag.toUpperCase()}</span>
+                    </div>
+                    <div class="feed-items">
+                        ${feed.items.map(item => `
+                            <div class="feed-item">
+                                <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
+                                <div class="description">${item.description}</div>
+                                <div class="meta">
+                                    ${item.pubDate.toLocaleDateString()} • ${feed.company}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(section);
+            });
+        }
+        
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                
+                if (!query) {
+                    renderFeeds(allFeeds);
+                    return;
+                }
+                
+                const filtered = allFeeds.map(feed => ({
+                    ...feed,
+                    items: feed.items.filter(item => 
+                        item.title.toLowerCase().includes(query) ||
+                        item.description.toLowerCase().includes(query)
+                    )
+                })).filter(feed => feed.items.length > 0);
+                
+                renderFeeds(filtered);
+            });
+        }
+        
+        function updateLastUpdated() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
+        }
+        
+        // Toggle competitor list
+        function toggleCompetitorList() {
+            const list = document.getElementById('competitorList');
+            const btn = document.querySelector('.expand-btn');
+
+            list.classList.toggle('show');
+            btn.classList.toggle('active');
+
+            if (list.classList.contains('show')) {
+                btn.querySelector('span:first-child').textContent = 'Hide List';
+            } else {
+                btn.querySelector('span:first-child').textContent = 'View List';
+            }
+        }
+
+        // Toggle source list
+        function toggleSourceList() {
+            const list = document.getElementById('sourceList');
+            const btn = document.querySelectorAll('.expand-btn')[1]; // Second button
+
+            list.classList.toggle('show');
+            btn.classList.toggle('active');
+
+            if (list.classList.contains('show')) {
+                btn.querySelector('span:first-child').textContent = 'Hide List';
+            } else {
+                btn.querySelector('span:first-child').textContent = 'View List';
+            }
+        }
+
+        // Populate competitor list
+        function populateCompetitorList() {
+            const listContainer = document.getElementById('competitorListItems');
+            const count = document.getElementById('competitorCount');
+
+            // Create unique list of competitors
+            const competitors = [];
+            competitorFeeds.forEach(feed => {
+                if (!competitors.find(c => c.name === feed.name)) {
+                    competitors.push(feed);
+                }
+            });
+
+            count.textContent = competitors.length;
+
+            listContainer.innerHTML = competitors.map(comp => `
+                <li>
+                    ${comp.name}
+                    <span class="tag tag-${comp.tag}">${comp.tag}</span>
+                </li>
+            `).join('');
+        }
+
+        // Populate source list
+        function populateSourceList() {
+            const listContainer = document.getElementById('sourceListItems');
+            const count = document.getElementById('sourceCount');
+
+            count.textContent = competitorFeeds.length;
+
+            listContainer.innerHTML = competitorFeeds.map(feed => `
+                <li>
+                    ${feed.name}
+                    <span class="tag tag-${feed.tag}">${feed.tag}</span>
+                </li>
+            `).join('');
+        }
+
+        // Load feeds on page load
+        loadFeeds();
+        populateCompetitorList();
+        populateSourceList();
+
+        // Refresh every 30 minutes
+        setInterval(loadFeeds, 30 * 60 * 1000);
+    </script>
+</body>
+</html>
