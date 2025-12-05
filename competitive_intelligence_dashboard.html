@@ -10,6 +10,10 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        html {
+            scroll-behavior: smooth;
+        }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
@@ -286,6 +290,17 @@
             border-bottom: 1px solid #e0e6ed;
             font-size: 13px;
             color: #2c3e50;
+            transition: background-color 0.2s;
+        }
+
+        .competitor-list li:hover {
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .competitor-list li a {
+            display: block;
+            width: 100%;
         }
 
         .competitor-list li:last-child {
@@ -654,19 +669,39 @@
         async function loadFeeds() {
             const container = document.getElementById('feedContainer');
             container.innerHTML = '<div class="loading">Loading competitive intelligence...</div>';
-            
+
             allFeeds = [];
-            
-            // Load all feeds
+
+            // Load all feeds - try multiple feeds per competitor
             for (const competitor of competitorFeeds) {
+                let competitorFeed = null;
+
+                // Try each feed URL until we get data
                 for (const feedUrl of competitor.feeds) {
                     const feedData = await fetchFeed(feedUrl, competitor.name, competitor.tag);
-                    if (feedData) {
-                        allFeeds.push(feedData);
+                    if (feedData && feedData.items && feedData.items.length > 0) {
+                        if (!competitorFeed) {
+                            competitorFeed = feedData;
+                        } else {
+                            // Merge items from multiple successful feeds
+                            competitorFeed.items.push(...feedData.items);
+                        }
                     }
                 }
+
+                // Add competitor even if no items found (shows empty section)
+                if (competitorFeed) {
+                    allFeeds.push(competitorFeed);
+                } else {
+                    // Create empty feed section so competitor still appears
+                    allFeeds.push({
+                        company: competitor.name,
+                        tag: competitor.tag,
+                        items: []
+                    });
+                }
             }
-            
+
             renderFeeds(allFeeds);
             setupSearch();
             updateLastUpdated();
@@ -674,12 +709,12 @@
         
         function renderFeeds(feeds) {
             const container = document.getElementById('feedContainer');
-            
+
             if (feeds.length === 0) {
                 container.innerHTML = `
                     <div class="note">
-                        <strong>⚠️ Setup Required:</strong> This dashboard uses RSS2JSON API. 
-                        To activate live feeds, get a free API key from <a href="https://rss2json.com" target="_blank">rss2json.com</a> 
+                        <strong>⚠️ Setup Required:</strong> This dashboard uses RSS2JSON API.
+                        To activate live feeds, get a free API key from <a href="https://rss2json.com" target="_blank">rss2json.com</a>
                         and replace 'YOUR_API_KEY' in the code.<br><br>
                         <strong>Manual Alternative:</strong> Visit these sources directly:
                         <ul style="margin-top: 10px;">
@@ -692,31 +727,36 @@
                 `;
                 return;
             }
-            
+
             container.innerHTML = '';
-            
+
             feeds.forEach(feed => {
                 const section = document.createElement('div');
                 section.className = 'feed-section';
-                
+                section.id = `feed-${feed.tag}`;
+
+                const feedItemsHTML = feed.items.length > 0
+                    ? feed.items.map(item => `
+                        <div class="feed-item">
+                            <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
+                            <div class="description">${item.description}</div>
+                            <div class="meta">
+                                ${item.pubDate.toLocaleDateString()} • ${feed.company}
+                            </div>
+                        </div>
+                    `).join('')
+                    : '<div class="feed-item" style="opacity: 0.6;">No recent updates available. Check back later or visit their website directly.</div>';
+
                 section.innerHTML = `
                     <div class="feed-header">
                         <h2>${feed.company}</h2>
                         <span class="company-tag tag-${feed.tag}">${feed.tag.toUpperCase()}</span>
                     </div>
                     <div class="feed-items">
-                        ${feed.items.map(item => `
-                            <div class="feed-item">
-                                <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
-                                <div class="description">${item.description}</div>
-                                <div class="meta">
-                                    ${item.pubDate.toLocaleDateString()} • ${feed.company}
-                                </div>
-                            </div>
-                        `).join('')}
+                        ${feedItemsHTML}
                     </div>
                 `;
-                
+
                 container.appendChild(section);
             });
         }
@@ -795,7 +835,7 @@
 
             listContainer.innerHTML = competitors.map(comp => `
                 <li>
-                    ${comp.name}
+                    <a href="#feed-${comp.tag}" style="color: inherit; text-decoration: none;">${comp.name}</a>
                     <span class="tag tag-${comp.tag}">${comp.tag}</span>
                 </li>
             `).join('');
