@@ -1,10 +1,10 @@
 # Competitive Intelligence Tracker
 
-![Competitors](https://img.shields.io/badge/Competitors-41-blue)
-![Categories](https://img.shields.io/badge/Categories-9-green)
+![Competitors](https://img.shields.io/badge/Competitors-42-blue)
+![Categories](https://img.shields.io/badge/Categories-5-green)
 ![Smart_Cache](https://img.shields.io/badge/Smart_Cache-Enabled-orange)
 
-Real-time competitive intelligence dashboard tracking 41+ companies across DLP, DSPM, Browser Security, and Workflow/BPM markets with smart caching and automated feed aggregation.
+Real-time competitive intelligence dashboard tracking 45 companies across DLP, DSPM, Browser Security, and Workflow/BPM markets with smart caching and automated feed aggregation.
 
 ## 🎯 Key Features
 
@@ -15,11 +15,12 @@ Real-time competitive intelligence dashboard tracking 41+ companies across DLP, 
 - **Rate limit protection** - Avoids API throttling with smart delays
 
 ### **Live Dashboard**
-- **82+ RSS feeds** - Company blogs + Google News for all competitors
+- **90+ RSS feeds** - Company blogs + Google News for all competitors
 - **Category navigation** - Jump to any of 9 market categories
 - **Dual feed display** - Company blog posts first, then Google News
 - **Search & filter** - Find news across all sources
 - **Mobile responsive** - Works on desktop, tablet, and mobile
+- **Per-feed refresh** - Individual refresh buttons for each company
 
 ### **Automation Suite**
 - `add_competitors.py` - Rebuild dashboard from config
@@ -90,7 +91,7 @@ Wait a few minutes and refresh.
 └── create_alerts_guide.py                   # Google Alerts generator
 ```
 
-## 🏢 Tracked Companies (41)
+## 🏢 Tracked Companies (45)
 
 ### **DLP** (6)
 Nightfall AI, Varonis, Forcepoint, Digital Guardian, Proofpoint, Symantec
@@ -101,8 +102,8 @@ Cyera, BigID, Sentra, Normalyze, Laminar, Dig Security, Polar Security, Securiti
 ### **Browser Security** (7)
 SquareX, Island, Talon, LayerX, Seraphic, Surf, Menlo
 
-### **Workflow/BPM** (8)
-Camunda, ProcessMaker, Appian, Pega, Nintex, Bizagi, Flowable, Workato
+### **Workflow/BPM** (12)
+Automation Anywhere, UiPath, Blue Prism, Microsoft Power Automate, Camunda, ProcessMaker, Appian, Pega, Nintex, Bizagi, Flowable, Workato
 
 ### **CASB/SASE** (3)
 Netskope, Zscaler, Skyhigh Security
@@ -168,12 +169,13 @@ python create_alerts_guide.py      # Word doc
 
 ## 📈 Statistics
 
-- **Total Feeds**: 82+ (blog RSS + Google News)
-- **Companies with Direct RSS**: 22+
-- **News Items**: ~400+ (varies by freshness)
+- **Total Feeds**: 90+ (blog RSS + Google News)
+- **Companies with Direct RSS**: 9 (verified working)
+- **News Items**: ~450+ (varies by freshness)
 - **Cache Hit Rate**: ~100% on repeated loads
-- **First Load Time**: ~90 seconds
+- **First Load Time**: ~90 seconds (initial fetch)
 - **Cached Load Time**: <1 second
+- **Failed RSS Feeds**: 13 companies (404 errors, disabled by vendors)
 
 ## 🎨 Color-Coded Categories
 

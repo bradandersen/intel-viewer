@@ -3,30 +3,34 @@
 
 import json
 
-# RSS feeds found through web search
+# RSS feeds found through web search and verified
+# Note: Many companies have disabled RSS feeds or moved them. Only working feeds are listed.
 rss_feeds = {
+    # Working RSS feeds
     "Varonis": ["https://www.varonis.com/blog/feed"],
     "Netskope": ["https://www.netskope.com/feed"],
     "Camunda": ["https://camunda.com/feed/"],
     "ProcessMaker": ["https://www.processmaker.com/blog/feed/"],
     "Zscaler": ["https://www.zscaler.com/blogs/feeds/security-research"],
     "Wiz": ["https://www.wiz.io/blog/rss"],
-    "Cyera": ["https://www.cyera.com/blog/feed"],
-    "Nightfall AI": ["https://www.nightfall.ai/blog/feed"],
-    "Code42": ["https://www.code42.com/blog/feed/"],
     "CrowdStrike": ["https://www.crowdstrike.com/blog/feed/"],
-    "Sentra": ["https://www.sentra.io/blog/feed"],
-    "BigID": ["https://bigid.com/blog/feed/"],
-    "Island": ["https://www.island.io/blog/feed"],
     "LayerX Security": ["https://www.layerxsecurity.com/blog/feed"],
-    "Seraphic Security": ["https://seraphicsecurity.com/blog/feed"],
-    "Surf Security": ["https://www.surf.security/blog/feed"],
-    "Menlo Security": ["https://www.menlosecurity.com/blog/feed/"],
-    "Appian": ["https://www.appian.com/blog/feed/"],
-    "Nintex": ["https://www.nintex.com/blog/feed/"],
-    "Bizagi": ["https://www.bizagi.com/en/blog/feed"],
-    "Flowable": ["https://www.flowable.com/blog/feed"],
     "Workato": ["https://www.workato.com/blog/feed/"],
+
+    # RSS feeds disabled or returning 404 (verified 2025-12-05):
+    # "Nightfall AI": [],  # 404 - no RSS feed available
+    # "Cyera": [],  # 404 - no RSS feed available
+    # "Sentra": [],  # 404 - no RSS feed available
+    # "BigID": [],  # Returns HTML, not RSS
+    # "Code42": [],  # 404 - no RSS feed available
+    # "Island": [],  # 404 - no RSS feed available
+    # "Seraphic Security": [],  # 404 - no RSS feed available
+    # "Surf Security": [],  # 404 - no RSS feed available
+    # "Menlo Security": [],  # 404 - no RSS feed available
+    # "Appian": [],  # 404 - no RSS feed available
+    # "Nintex": [],  # 404 - no RSS feed available
+    # "Bizagi": [],  # 404 - no RSS feed available
+    # "Flowable": [],  # 404 - no RSS feed available
 }
 
 # Load competitor data

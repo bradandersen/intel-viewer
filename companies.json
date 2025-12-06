@@ -4,7 +4,9 @@
       "Nightfall AI",
       "Varonis",
       "Forcepoint",
+      "DTEX",
       "Digital Guardian",
+      "Microsoft Purview",
       "Proofpoint",
       "Symantec DLP"
     ],
@@ -15,34 +17,31 @@
       "Normalyze",
       "Laminar",
       "Dig Security",
-      "Polar Security",
-      "Securiti.ai"
+      "Polar Security"
     ],
     "CASB/SASE": [
       "Netskope",
       "Zscaler",
       "Skyhigh Security"
     ],
-    "Cloud Security": [
-      "Wiz",
-      "Lacework",
-      "Orca Security"
-    ],
-    "Endpoint/EDR": [
-      "CrowdStrike",
-      "SentinelOne",
-      "Code42"
-    ],
     "Browser Security": [
+        "Defensx",
+        "Ermes",
       "SquareX",
       "Island",
       "Talon",
       "LayerX Security",
+      "Perception Point",
+      "Redaccess",
       "Seraphic Security",
       "Surf Security",
       "Menlo Security"
     ],
     "Workflow/BPM": [
+      "Automation Anywhere",
+      "UiPath",
+      "Blue Prism",
+      "Microsoft Power Automate",
       "Camunda",
       "ProcessMaker",
       "Appian",
@@ -51,13 +50,6 @@
       "Bizagi",
       "Flowable",
       "Workato"
-    ],
-    "AI Security": [
-      "Lakera"
-    ],
-    "Other": [
-      "Veza",
-      "Microsoft Purview"
     ]
   }
 }

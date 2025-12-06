@@ -312,6 +312,17 @@ class TrackerGenerator:
         pattern = r'const competitorFeeds = \[.*?\];'
         content = re.sub(pattern, feeds_js, content, flags=re.DOTALL)
 
+        # Generate and replace getCategoryForCompany categories object
+        categories_js = "const categories = {\n"
+        for category, companies in self.companies_config['categories'].items():
+            companies_list = "', '".join(companies)
+            categories_js += f"                '{category}': ['{companies_list}'],\n"
+        categories_js += "            };"
+
+        # Replace categories object in getCategoryForCompany function
+        category_pattern = r'const categories = \{[^}]+\};'
+        content = re.sub(category_pattern, categories_js, content, flags=re.DOTALL)
+
         # Generate and insert CSS tags
         css_section = '\n        '.join(css_tags)
 
